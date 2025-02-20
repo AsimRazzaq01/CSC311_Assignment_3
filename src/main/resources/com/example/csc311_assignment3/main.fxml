@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc311_assignment3.MazeController">
    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
       <Tab text="Maze 1">
          <VBox alignment="CENTER">
-            <Pane fx:id="maze1Pane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <Pane fx:id="maze1Pane" prefHeight="492.0" prefWidth="700.0" VBox.vgrow="ALWAYS">
                <ImageView fx:id="maze1ImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" />
-               <AnchorPane fx:id="robotAnchorPane" prefHeight="200.0" prefWidth="200.0" />
             </Pane>
-            <VBox alignment="CENTER" prefHeight="140.0" prefWidth="700.0" style="-fx-background-color: #95c7f5;">
-               <Button fx:id="startAnimationButton1" alignment="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="133.0" text="Start Animation" />
+            <VBox alignment="CENTER" maxHeight="117.0" prefHeight="140.0" prefWidth="700.0" style="-fx-background-color: #95c7f5;">
+               <GridPane VBox.vgrow="ALWAYS">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <Button fx:id="startAnimationButton1" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="41.0" prefWidth="133.0" text="Start Animation" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+               </GridPane>
+               <padding>
+                  <Insets bottom="10.0" top="10.0" />
+               </padding>
             </VBox>
          </VBox>
       </Tab>
@@ -28,12 +43,24 @@
                <VBox prefHeight="331.0" prefWidth="110.0" HBox.hgrow="SOMETIMES" />
                <Pane fx:id="maze2Pane" maxWidth="1097.0" prefHeight="200.0" prefWidth="480.0" HBox.hgrow="ALWAYS">
                   <ImageView fx:id="maze2ImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" />
-                  <AnchorPane fx:id="carAnchorPane" prefHeight="200.0" prefWidth="200.0" />
                </Pane>
                <VBox prefHeight="331.0" prefWidth="110.0" HBox.hgrow="SOMETIMES" />
             </HBox>
-            <VBox alignment="CENTER" prefHeight="140.0" prefWidth="700.0" style="-fx-background-color: #95c7f5;">
-               <Button fx:id="startAnimationButton2" alignment="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="133.0" text="Start Animation" />
+            <VBox alignment="CENTER" maxHeight="117.0" prefHeight="140.0" prefWidth="700.0" style="-fx-background-color: #95c7f5;">
+               <GridPane VBox.vgrow="ALWAYS">
+                  <columnConstraints>
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <padding>
+                     <Insets bottom="20.0" top="20.0" />
+                  </padding>
+                  <Button fx:id="startAnimationButton2" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="41.0" prefWidth="133.0" text="Start Animation" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+               </GridPane>
             </VBox>
          </VBox>
       </Tab>

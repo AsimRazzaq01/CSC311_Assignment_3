@@ -13,6 +13,7 @@ public class MazeApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MazeApplication.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 500);
         stage.setTitle("Maze Robot Navigation");
+        stage.setMinHeight(535.5);
         stage.setScene(scene);
         stage.show();
     }

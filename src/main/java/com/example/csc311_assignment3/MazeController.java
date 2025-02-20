@@ -1,11 +1,15 @@
 package com.example.csc311_assignment3;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.io.InputStream;
 
@@ -13,11 +17,7 @@ public class MazeController {
     @FXML
     private Pane maze1Pane;
     @FXML
-    private AnchorPane robotAnchorPane;
-    @FXML
     private ImageView maze1ImageView;
-    @FXML
-    private AnchorPane carAnchorPane;
     @FXML
     private Pane maze2Pane;
     @FXML
@@ -29,12 +29,12 @@ public class MazeController {
 
     private final static String MAZE1_FILE = "/images/maze.png";
     private final static String MAZE2_FILE = "/images/maze2.png";
-    private final static String ROBOT_FILE = "/images/robot.png";
     private final static String CAR_FILE = "/images/car.png";
     private final static InputStream MAZE1 = MazeController.class.getResourceAsStream(MAZE1_FILE);
     private final static InputStream MAZE2 = MazeController.class.getResourceAsStream(MAZE2_FILE);
-    private final static InputStream ROBOT = MazeController.class.getResourceAsStream(ROBOT_FILE);
     private final static InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
+
+    Robot robot = new Robot();
 
     @FXML
     public void initialize() {
@@ -43,18 +43,35 @@ public class MazeController {
             //Makes the image responsive with window size by binding it to the parent pane's width and height
             maze1ImageView.fitWidthProperty().bind(maze1Pane.widthProperty());
             maze1ImageView.fitHeightProperty().bind(maze1Pane.heightProperty());
-            //Makes the anchor pane containing the robot responsive with window size by binding it to the parent pane's width and height
-            robotAnchorPane.prefWidthProperty().bind(maze1Pane.widthProperty());
-            robotAnchorPane.prefHeightProperty().bind(maze1Pane.heightProperty());
+
+            //Create a robot object and add it to the maze 1 pane
+            maze1Pane.getChildren().add(robot);
+            maze1Pane.widthProperty().addListener(mz1Width);
+            maze1Pane.heightProperty().addListener(mz1Height);
         }
         if (MAZE2 != null) {
             maze2ImageView.setImage(new Image(MAZE2));
-            //Makes the anchor pane containing the car responsive with window size by binding it to the parent pane's width and height
-            carAnchorPane.prefWidthProperty().bind(maze2Pane.widthProperty());
-            carAnchorPane.prefHeightProperty().bind(maze2Pane.heightProperty());
             //Makes the image responsive with window size by binding it to the parent pane's width and height
             maze2ImageView.fitWidthProperty().bind(maze2Pane.widthProperty());
             maze2ImageView.fitHeightProperty().bind(maze2Pane.heightProperty());
         }
     }
+
+    ChangeListener<Number> mz1Width = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            //Listens to the width of maze 1 image and scales robot position according to its size
+            robot.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
+            robot.updateSpritePosition();
+        }
+    };
+
+    ChangeListener<Number> mz1Height = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            //Listens to the height of maze 1 image and scales robot position according to its size
+            robot.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
+            robot.updateSpritePosition();
+        }
+    };
 }
