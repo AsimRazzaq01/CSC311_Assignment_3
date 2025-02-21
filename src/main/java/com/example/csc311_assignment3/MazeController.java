@@ -2,14 +2,11 @@ package com.example.csc311_assignment3;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.io.InputStream;
 
@@ -44,7 +41,7 @@ public class MazeController {
             maze1ImageView.fitWidthProperty().bind(maze1Pane.widthProperty());
             maze1ImageView.fitHeightProperty().bind(maze1Pane.heightProperty());
 
-            //Create a robot object and add it to the maze 1 pane
+            //Created a robot object and add it to the maze 1 pane
             maze1Pane.getChildren().add(robot);
             maze1Pane.widthProperty().addListener(mz1Width);
             maze1Pane.heightProperty().addListener(mz1Height);
@@ -57,21 +54,27 @@ public class MazeController {
         }
     }
 
-    ChangeListener<Number> mz1Width = new ChangeListener<Number>() {
+    ChangeListener<Number> mz1Width = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
             //Listens to the width of maze 1 image and scales robot position according to its size
+            //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
-            robot.updateSpritePosition();
+            //Listens to the width of maze 1 pane and scales robot size accordingly to be a consistent size
+            robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            robot.updateRobotRelativePosition();
         }
     };
 
-    ChangeListener<Number> mz1Height = new ChangeListener<Number>() {
+    ChangeListener<Number> mz1Height = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
             //Listens to the height of maze 1 image and scales robot position according to its size
+            //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
-            robot.updateSpritePosition();
+            //Listens to the height of maze 1 pane and scales robot size accordingly to be a consistent size
+            robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            robot.updateRobotRelativePosition();
         }
     };
 }

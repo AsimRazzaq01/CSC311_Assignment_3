@@ -18,10 +18,9 @@ public class Robot extends ImageView {
         if (ROBOT != null) {
             this.setImage(new Image(ROBOT));
             this.setPreserveRatio(false);
-            this.setFitWidth(25);
-            this.setFitHeight(25);
+            //Coordinates that position robot at entrance of maze
             this.robotX = 15;
-            this.robotY = 258;
+            this.robotY = 259;
         }
     }
 
@@ -49,8 +48,16 @@ public class Robot extends ImageView {
         this.scaleFactorY = scaleFactorY;
     }
 
-    public void updateSpritePosition() {
+    public void updateRobotRelativePosition() {
+        //Multiply the original coordinates by the calculated scale factor yields the new relative position of the robot
         this.setLayoutX(robotX * scaleFactorX);
         this.setLayoutY(robotY * scaleFactorY);
+    }
+
+    public void updateRobotSize(double width, double height) {
+        //The smaller the number (robot image width or height / 700 the original scene width) that the width and height of maze 1 pane are multiplied,
+        //the dimensions of the robot become smaller
+        this.setFitWidth(width * 0.036);
+        this.setFitHeight(height * 0.056);
     }
 }
