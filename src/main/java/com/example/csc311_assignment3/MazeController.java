@@ -1,16 +1,22 @@
 package com.example.csc311_assignment3;
 
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
+public class MazeController{
 
-public class MazeController {
     @FXML
     private Pane maze1Pane;
     @FXML
@@ -23,6 +29,16 @@ public class MazeController {
     private Button startAnimationButton1;
     @FXML
     private Button startAnimationButton2;
+    @FXML
+    void Automatic_Animation(ActionEvent event) {
+        // Animation of car (Automatically) on button click
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(robot);
+        translate.setDuration(Duration.seconds(2));
+        translate.setByX(200);
+        translate.play();
+
+    }
 
     private final static String MAZE1_FILE = "/images/maze.png";
     private final static String MAZE2_FILE = "/images/maze2.png";
@@ -31,6 +47,7 @@ public class MazeController {
     private final static InputStream MAZE2 = MazeController.class.getResourceAsStream(MAZE2_FILE);
     private final static InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
 
+    // new object robot
     Robot robot = new Robot();
 
     @FXML
@@ -77,4 +94,5 @@ public class MazeController {
             robot.updateRobotRelativePosition();
         }
     };
+
 }
