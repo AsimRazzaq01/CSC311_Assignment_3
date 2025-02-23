@@ -60,4 +60,6 @@ public class Robot extends ImageView {
         this.setFitWidth(width * 0.036);
         this.setFitHeight(height * 0.056);
     }
+
+
 }
