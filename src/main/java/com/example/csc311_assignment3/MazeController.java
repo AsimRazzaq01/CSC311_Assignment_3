@@ -1,7 +1,7 @@
 package com.example.csc311_assignment3;
 
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.InputStream;
@@ -82,6 +83,154 @@ public class MazeController {
 
     }
 
+    @FXML
+    private void automaticAnimation() {
+        Timeline robotAnimation = new Timeline();
+
+        //First move
+        robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), _ -> {
+            Stage stage = (Stage) maze1Pane.getScene().getWindow();
+            stage.setResizable(false);
+            robot.setRobotX(15);
+            robot.setRobotY(259);
+            robot.updateRobotRelativePosition();
+        }));
+        for (double i = 25, time = 300; i <= 45 && time <= 500; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Second move
+        for (double i = 249, time = 600; i >= 159 && time <= 1500; i -= 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+        robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(1600), _ -> {
+            robot.setRobotY(148);
+            robot.updateRobotRelativePosition();
+        }));
+
+        //Third move
+        for (double i = 55, time = 1700; i <= 265 && time <= 3800; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Fourth move
+        for (double i = 148, time = 3900; i >= 89 && time <= 4500; i -= 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+        robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(4600), _ -> {
+            robot.setRobotY(91);
+            robot.updateRobotRelativePosition();
+        }));
+
+        //Fifth move
+        for (double i = 275, time = 4700; i <= 325 && time <= 5200; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Sixth move
+        for (double i = 91, time = 5300; i <= 311 && time <= 7500; i += 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+        robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(7600), _ -> {
+            robot.setRobotY(317);
+            robot.updateRobotRelativePosition();
+        }));
+
+        //Seventh move
+        for (double i = 335, time = 7700; i <= 375 && time <= 8100; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+        robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(8200), _ -> {
+            robot.setRobotX(380);
+            robot.updateRobotRelativePosition();
+        }));
+
+        //Eighth move
+        for (double i = 315, time = 8300; i >= 205 && time <= 9400; i -= 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Ninth move
+        for (double i = 385, time = 9500; i <= 495 && time <= 10600; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Tenth move
+        for (double i = 195, time = 10700; i >= 95 && time <= 11700; i -= 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Eleventh move
+        for (double i = 505, time = 11800; i <= 555 && time <= 12300; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Twelfth move
+        for (double i = 105, time = 12400; i <= 245 && time <= 13800; i += 10, time += 100) {
+            double robotNewY = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotY(robotNewY);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Thirteenth move
+        for (double i = 565, time = 13900; i <= 615 && time <= 14400; i += 10, time += 100) {
+            double robotNewX = i;
+            robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                robot.setRobotX(robotNewX);
+                robot.updateRobotRelativePosition();
+            }));
+        }
+
+        //Play Timeline
+        robotAnimation.play();
+    }
+
     ChangeListener<Number> mz1Width = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
@@ -106,67 +255,10 @@ public class MazeController {
         }
     };
 
-
     @FXML
-    void Manual_Mode() {
+    void manualMode() {
         movementEnabled = true;
         maze1Pane.requestFocus();
-    }
-
-
-
-    @FXML
-    private void Automatic_Animation() {
-//        movementEnabled = true;
-//        maze1Pane.requestFocus();
-
-        // Animation of car (Automatically) on button click
-        // initial Move 0
-        TranslateTransition translate = new TranslateTransition(Duration.millis(500), robot);
-        translate.setByX(35);
-        //1st move
-        TranslateTransition translate1 = new TranslateTransition(Duration.millis(700), robot);
-        translate1.setByY(-110);
-        //2nd move
-        TranslateTransition translate2 = new TranslateTransition(Duration.millis(1000), robot);
-        translate2.setByX(255);
-        //3rd move
-        TranslateTransition translate3 = new TranslateTransition(Duration.millis(500), robot);
-        translate3.setByY(-55);
-        //4th move
-        TranslateTransition translate4 = new TranslateTransition(Duration.millis(500), robot);
-        translate4.setByX(62);
-        //5th move
-        TranslateTransition translate5 = new TranslateTransition(Duration.millis(1000), robot);
-        translate5.setByY(222);
-        //6th move
-        TranslateTransition translate6 = new TranslateTransition(Duration.millis(500), robot);
-        translate6.setByX(68);
-        //7th move
-        TranslateTransition translate7 = new TranslateTransition(Duration.millis(700), robot);
-        translate7.setByY(-110);
-        //8th move
-        TranslateTransition translate8 = new TranslateTransition(Duration.millis(700), robot);
-        translate8.setByX(128);
-        //9th move
-        TranslateTransition translate9 = new TranslateTransition(Duration.millis(700), robot);
-        translate9.setByY(-110);
-        //10th move
-        TranslateTransition translate10 = new TranslateTransition(Duration.millis(500), robot);
-        translate10.setByX(70);
-        //11th move
-        TranslateTransition translate11 = new TranslateTransition(Duration.millis(700), robot);
-        translate11.setByY(150);
-        //12th move
-        TranslateTransition translate12 = new TranslateTransition(Duration.millis(1000), robot);
-        translate12.setByX(200);
-
-        // Add all the transitions to a sequence
-        SequentialTransition sequentialTransition = new SequentialTransition(translate,
-                translate1, translate2, translate3, translate4, translate5, translate6,
-                translate7, translate8, translate9, translate10, translate11, translate12);
-        //Play Sequence
-        sequentialTransition.play();
     }
 
     private void moveRobot(KeyCode key) {
