@@ -1,5 +1,7 @@
 package com.example.csc311_assignment3;
 
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -103,10 +106,67 @@ public class MazeController {
         }
     };
 
+
     @FXML
-    private void onStartButtonClick() {
+    void Manual_Mode() {
         movementEnabled = true;
         maze1Pane.requestFocus();
+    }
+
+
+
+    @FXML
+    private void Automatic_Animation() {
+//        movementEnabled = true;
+//        maze1Pane.requestFocus();
+
+        // Animation of car (Automatically) on button click
+        // initial Move 0
+        TranslateTransition translate = new TranslateTransition(Duration.millis(500), robot);
+        translate.setByX(35);
+        //1st move
+        TranslateTransition translate1 = new TranslateTransition(Duration.millis(700), robot);
+        translate1.setByY(-110);
+        //2nd move
+        TranslateTransition translate2 = new TranslateTransition(Duration.millis(1000), robot);
+        translate2.setByX(255);
+        //3rd move
+        TranslateTransition translate3 = new TranslateTransition(Duration.millis(500), robot);
+        translate3.setByY(-55);
+        //4th move
+        TranslateTransition translate4 = new TranslateTransition(Duration.millis(500), robot);
+        translate4.setByX(62);
+        //5th move
+        TranslateTransition translate5 = new TranslateTransition(Duration.millis(1000), robot);
+        translate5.setByY(222);
+        //6th move
+        TranslateTransition translate6 = new TranslateTransition(Duration.millis(500), robot);
+        translate6.setByX(68);
+        //7th move
+        TranslateTransition translate7 = new TranslateTransition(Duration.millis(700), robot);
+        translate7.setByY(-110);
+        //8th move
+        TranslateTransition translate8 = new TranslateTransition(Duration.millis(700), robot);
+        translate8.setByX(128);
+        //9th move
+        TranslateTransition translate9 = new TranslateTransition(Duration.millis(700), robot);
+        translate9.setByY(-110);
+        //10th move
+        TranslateTransition translate10 = new TranslateTransition(Duration.millis(500), robot);
+        translate10.setByX(70);
+        //11th move
+        TranslateTransition translate11 = new TranslateTransition(Duration.millis(700), robot);
+        translate11.setByY(150);
+        //12th move
+        TranslateTransition translate12 = new TranslateTransition(Duration.millis(1000), robot);
+        translate12.setByX(200);
+
+        // Add all the transitions to a sequence
+        SequentialTransition sequentialTransition = new SequentialTransition(translate,
+                translate1, translate2, translate3, translate4, translate5, translate6,
+                translate7, translate8, translate9, translate10, translate11, translate12);
+        //Play Sequence
+        sequentialTransition.play();
     }
 
     private void moveRobot(KeyCode key) {
