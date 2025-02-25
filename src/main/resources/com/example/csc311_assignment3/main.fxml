@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc311_assignment3.MazeController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csc311_assignment3.MazeController">
    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
       <Tab text="Maze 1">
          <VBox alignment="CENTER">
@@ -33,7 +33,7 @@
                   </rowConstraints>
                   <Button fx:id="startAnimationButton1" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#automaticAnimation" prefHeight="28.0" prefWidth="186.0" text="Start Animation" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                   <Button fx:id="manualModeButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#manualMode" text="Manual Mode" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
-                  <Button mnemonicParsing="false" onAction="#swapPlayer" prefHeight="37.0" prefWidth="76.0" text="Swap" GridPane.columnIndex="2" />
+                  <Button fx:id="swapSprite" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#swapPlayer" prefHeight="37.0" prefWidth="76.0" text="Swap" GridPane.columnIndex="2" />
                </GridPane>
                <padding>
                   <Insets bottom="10.0" top="10.0" />
