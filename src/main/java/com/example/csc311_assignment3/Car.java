@@ -79,7 +79,7 @@ public class Car {
     }
 
     public void updateCarImageRelativePosition() {
-        //Multiply the original coordinates by the calculated scale factor yields the new relative position of the robot
+        //Multiplies the original coordinates by the calculated scale factor yields the new relative position of the robot
         carImageView.setLayoutX(carX * scaleFactorX);
         carImageView.setLayoutY(carY * scaleFactorY);
     }

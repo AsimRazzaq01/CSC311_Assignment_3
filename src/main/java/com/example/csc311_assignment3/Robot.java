@@ -49,7 +49,7 @@ public class Robot extends ImageView {
     }
 
     public void updateRobotRelativePosition() {
-        //Multiply the original coordinates by the calculated scale factor yields the new relative position of the robot
+        //Multiplies the original coordinates by the calculated scale factor yields the new relative position of the robot
         this.setLayoutX(robotX * scaleFactorX);
         this.setLayoutY(robotY * scaleFactorY);
     }
