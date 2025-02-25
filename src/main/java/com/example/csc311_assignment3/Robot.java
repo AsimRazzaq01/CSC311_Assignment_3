@@ -7,7 +7,12 @@ import java.io.InputStream;
 
 public class Robot extends ImageView {
     private final static String ROBOT_FILE = "/images/robot.png";
+    private final static String CAR_FILE = "/images/car.png";
     private final static InputStream ROBOT = MazeController.class.getResourceAsStream(ROBOT_FILE);
+    private final static InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
+    private final Image carImage = new Image(CAR);
+    private final Image robotImage = new Image(ROBOT);
+    private boolean isRobot = true;
 
     private double robotX;
     private double robotY;
@@ -17,11 +22,23 @@ public class Robot extends ImageView {
     public Robot() {
         if (ROBOT != null) {
             this.setImage(new Image(ROBOT));
+            this.setImage(robotImage);
             this.setPreserveRatio(false);
+            isRobot = true;
             //Coordinates that position robot at entrance of maze
             this.robotX = 15;
             this.robotY = 259;
         }
+    }
+
+    //swaps player between car and robot
+    public void swapPlayer(){
+        if (isRobot)
+            this.setImage(carImage);
+        else
+            this.setImage(robotImage);
+        this.setPreserveRatio(true);
+        isRobot = !isRobot;
     }
 
     public double getRobotX() {

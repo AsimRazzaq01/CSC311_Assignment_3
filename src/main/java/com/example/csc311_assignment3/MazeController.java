@@ -81,6 +81,11 @@ public class MazeController {
     }
 
     @FXML
+    void swapPlayer(){
+        robot.swapPlayer();
+    }
+
+    @FXML
     private void automaticAnimation() {
         Timeline robotAnimation = new Timeline();
         Stage stage = (Stage) maze1Pane.getScene().getWindow();
