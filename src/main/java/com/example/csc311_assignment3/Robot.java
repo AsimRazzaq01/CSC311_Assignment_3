@@ -6,8 +6,6 @@ import javafx.scene.image.ImageView;
 import java.io.InputStream;
 
 public class Robot extends ImageView {
-    private final static String ROBOT_FILE = "/images/robot.png";
-    private final static InputStream ROBOT = MazeController.class.getResourceAsStream(ROBOT_FILE);
 
     private double robotX;
     private double robotY;
@@ -15,6 +13,8 @@ public class Robot extends ImageView {
     private double scaleFactorY;
 
     public Robot() {
+        String ROBOT_FILE = "/images/robot.png";
+        InputStream ROBOT = MazeController.class.getResourceAsStream(ROBOT_FILE);
         if (ROBOT != null) {
             this.setImage(new Image(ROBOT));
             this.setPreserveRatio(false);
