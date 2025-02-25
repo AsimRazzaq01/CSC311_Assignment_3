@@ -31,20 +31,22 @@ public class MazeController {
     private Button manualModeButton;
     @FXML
     private Button startAnimationButton2;
+    @FXML
+    private Button swapSprite;
 
     private final static String MAZE1_FILE = "/images/maze.png";
     private final static String MAZE2_FILE = "/images/maze2.png";
     private final static InputStream MAZE1 = MazeController.class.getResourceAsStream(MAZE1_FILE);
     private final static InputStream MAZE2 = MazeController.class.getResourceAsStream(MAZE2_FILE);
-    private boolean movementEnabled = false;
+    private boolean movement1Enabled = false;
+    private boolean movement2Enabled = false;
     private boolean robotEnabled;
 
     Robot robot = new Robot();
     Car carImage1 = new Car(15,259,1);
-    Car carImage2 = new Car(15,20,2);
+    Car carImage2 = new Car(10,20,2);
     PixelReader robotPixelImage;
-    @FXML
-    private Button swapSprite;
+    PixelReader carPixelImage;
 
     @FXML
     public void initialize() {
@@ -67,11 +69,11 @@ public class MazeController {
             maze1Pane.setFocusTraversable(true);
 
             maze1Pane.setOnKeyPressed(event -> {
-                if (movementEnabled && robotEnabled) {  // Only move if enabled
+                if (movement1Enabled && robotEnabled) {  // Only move if enabled
                     moveRobot(event.getCode());
                     event.consume(); // Prevent tab switching
                 }
-                if (movementEnabled && !robotEnabled) {
+                if (movement1Enabled && !robotEnabled) {
                     moveCarImage(event.getCode());
                     event.consume();
                 }
@@ -84,15 +86,30 @@ public class MazeController {
             maze2Pane.getChildren().add(carImage2.getCarImageView());
             maze2ImageView.fitWidthProperty().bind(maze2Pane.widthProperty());
             maze2ImageView.fitHeightProperty().bind(maze2Pane.heightProperty());
+            carPixelImage = maze2ImageView.getImage().getPixelReader();
             maze2Pane.widthProperty().addListener(mz2Width);
             maze2Pane.heightProperty().addListener(mz2Height);
+
+            maze2Pane.setOnKeyPressed(event -> {
+                if (movement2Enabled) {
+                    moveCarImage(event.getCode());
+                    event.consume();
+                }
+            });
         }
     }
 
     @FXML
     void manualMode() {
-        movementEnabled = true;
+        movement1Enabled = true;
+        movement2Enabled = false;
         maze1Pane.requestFocus();
+    }
+    @FXML
+    public void manualMode2() {
+        movement2Enabled = true;
+        movement1Enabled = false;
+        maze2Pane.requestFocus();
     }
 
     //swaps player between car and robot
@@ -125,7 +142,7 @@ public class MazeController {
             startAnimationButton1.setDisable(true);
             manualModeButton.setDisable(true);
             swapSprite.setDisable(true);
-            movementEnabled = false;
+            movement1Enabled = false;
             robot.setRobotX(15);
             robot.setRobotY(259);
             robot.updateRobotRelativePosition();
@@ -360,18 +377,28 @@ public class MazeController {
                 moveCarImageSprite(0, carImageStep);
                 break;
             case LEFT:
-                if (carImage1.isFacingRight()) {
+                if (carImage1.isFacingRight() && movement1Enabled) {
                     carImage1.flip();
                     carImage1.setFacingRight(false);
                     carImage1.setFacingLeft(true);
                 }
+                if (carImage2.isFacingRight() && movement2Enabled) {
+                    carImage2.flip();
+                    carImage2.setFacingRight(false);
+                    carImage2.setFacingLeft(true);
+                }
                 moveCarImageSprite(-carImageStep,0);
                 break;
             case RIGHT:
-                if (carImage1.isFacingLeft()) {
+                if (carImage1.isFacingLeft() && movement1Enabled) {
                     carImage1.flip();
                     carImage1.setFacingRight(true);
                     carImage1.setFacingLeft(false);
+                }
+                if (carImage2.isFacingLeft() && movement2Enabled) {
+                    carImage2.flip();
+                    carImage2.setFacingRight(true);
+                    carImage2.setFacingLeft(false);
                 }
                 moveCarImageSprite(carImageStep,0);
         }
@@ -388,10 +415,15 @@ public class MazeController {
     }
 
     private void moveCarImageSprite(double newX, double newY) {
-        if (checkCarImageEdges(newX, newY)) {
+        if (checkCarImageEdges(newX, newY) && movement1Enabled) {
             carImage1.setCarImageX(carImage1.getCarImageX() + newX);
             carImage1.setCarImageY(carImage1.getCarImageY() + newY);
             carImage1.updateCarImageRelativePosition();
+        }
+        if (checkCarImageEdges(newX, newY) && movement2Enabled) {
+            carImage2.setCarImageX(carImage2.getCarImageX() + newX);
+            carImage2.setCarImageY(carImage2.getCarImageY() + newY);
+            carImage2.updateCarImageRelativePosition();
         }
     }
 
@@ -441,44 +473,72 @@ public class MazeController {
     }
 
     private boolean checkCarImageEdges(double newX, double newY) {
-        int maze1WallArgb = -16755815;
-        int carWidth = 25, carHeight = 25;
-        int carImageLeftEdge = (int) (carImage1.getCarImageX() + newX);
-        int carImageRightEdge = (int) (carImage1.getCarImageX() + newX + carWidth);
-        int carImageTopEdge = (int) (carImage1.getCarImageY() + newY);
-        int carImageBottomEdge = (int) (carImage1.getCarImageY() + newY + carHeight);
+        int currentMazeWallArgb = 0;
+        PixelReader currentMazeReader = null;
+        int carWidthInImage, carHeightInImage;
+        int carImageLeftEdge = 0;
+        int carImageRightEdge = 0;
+        int carImageTopEdge = 0;
+        int carImageBottomEdge = 0;
 
-        int carImageHeight = (int) (maze1ImageView.getImage().getHeight());
-        int carImageWidth = (int) (maze1ImageView.getImage().getWidth());
+        int carImageHeight = 0;
+        int carImageWidth = 0;
+
+        if (movement1Enabled) {
+            carWidthInImage = 25;
+            carHeightInImage = 25;
+            currentMazeWallArgb = -16755815;
+            currentMazeReader = robotPixelImage;
+            carImageLeftEdge = (int) (carImage1.getCarImageX() + newX);
+            carImageRightEdge = (int) (carImage1.getCarImageX() + newX + carWidthInImage);
+            carImageTopEdge = (int) (carImage1.getCarImageY() + newY);
+            carImageBottomEdge = (int) (carImage1.getCarImageY() + newY + carHeightInImage);
+
+            carImageHeight = (int) (maze1ImageView.getImage().getHeight());
+            carImageWidth = (int) (maze1ImageView.getImage().getWidth());
+        }
+        if (movement2Enabled) {
+            carWidthInImage = 60;
+            carHeightInImage = 41;
+            currentMazeWallArgb = -16760833;
+            currentMazeReader = carPixelImage;
+            carImageLeftEdge = (int) (carImage2.getCarImageX() + newX);
+            carImageRightEdge = (int) (carImage2.getCarImageX() + newX + carWidthInImage);
+            carImageTopEdge = (int) (carImage2.getCarImageY() + newY);
+            carImageBottomEdge = (int) (carImage2.getCarImageY() + newY + carHeightInImage);
+
+            carImageHeight = (int) (maze2ImageView.getImage().getHeight());
+            carImageWidth = (int) (maze2ImageView.getImage().getWidth());
+        }
 
         if (newX > 0) {
-            //Checks right edge of robot from top to down
+            //Checks right edge of car from top to down
             for (int y = carImageTopEdge; y < carImageBottomEdge; y++) {
-                if (carImageRightEdge >= carImageWidth || robotPixelImage.getArgb(carImageRightEdge, y) == maze1WallArgb) {
+                if (carImageRightEdge >= carImageWidth || currentMazeReader.getArgb(carImageRightEdge, y) == currentMazeWallArgb) {
                     return false;
                 }
             }
         }
         else if (newX < 0) {
-            //Checks left edge of robot from top to down
+            //Checks left edge of car from top to down
             for (int y = carImageTopEdge; y < carImageBottomEdge; y++) {
-                if (carImageLeftEdge <= 0 || robotPixelImage.getArgb(carImageLeftEdge, y) == maze1WallArgb) {
+                if (carImageLeftEdge <= 0 || currentMazeReader.getArgb(carImageLeftEdge, y) == currentMazeWallArgb) {
                     return false;
                 }
             }
         }
         else if (newY > 0) {
-            //Checks bottom edge of robot from left to right
+            //Checks bottom edge of car from left to right
             for (int x = carImageLeftEdge; x < carImageRightEdge; x++) {
-                if (carImageBottomEdge >= carImageHeight || robotPixelImage.getArgb(x, carImageBottomEdge) == maze1WallArgb) {
+                if (carImageBottomEdge >= carImageHeight || currentMazeReader.getArgb(x, carImageBottomEdge) == currentMazeWallArgb) {
                     return false;
                 }
             }
         }
         else if (newY < 0) {
-            //Checks top edge of robot from left to right
+            //Checks top edge of car from left to right
             for (int x = carImageLeftEdge; x < carImageRightEdge; x++) {
-                if (carImageTopEdge <= 0 || robotPixelImage.getArgb(x, carImageTopEdge) == maze1WallArgb) {
+                if (carImageTopEdge <= 0 || currentMazeReader.getArgb(x, carImageTopEdge) == currentMazeWallArgb) {
                     return false;
                 }
             }
