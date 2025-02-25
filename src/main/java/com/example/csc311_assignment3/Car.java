@@ -6,8 +6,6 @@ import javafx.scene.image.ImageView;
 import java.io.InputStream;
 
 public class Car {
-    private final static String CAR_FILE = "/images/car.png";
-    private final static InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
 
     private ImageView carImageView;
 
@@ -17,14 +15,18 @@ public class Car {
     private double carY;
     private double scaleFactorX;
     private double scaleFactorY;
+    private int mazeNumber;
 
-    public Car(double startingX, double startingY) {
+    public Car(double startingX, double startingY, int mazeNumber) {
+        String CAR_FILE = "/images/car.png";
+        InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
         if (CAR != null) {
             carImageView = new ImageView();
             carImageView.setImage(new Image(CAR));
             carImageView.setPreserveRatio(false);
             this.carX = startingX;
             this.carY = startingY;
+            this.mazeNumber = mazeNumber;
         }
     }
 
@@ -85,7 +87,13 @@ public class Car {
     public void updateCarImageSize(double width, double height) {
         //The smaller the number (robot image width or height / 700 the original scene width) that the width and height of maze 1 pane are multiplied,
         //the dimensions of the robot become smaller
-        carImageView.setFitWidth(width * 0.036);
-        carImageView.setFitHeight(height * 0.056);
+        if (mazeNumber == 1) {
+            carImageView.setFitWidth(width * 0.036);
+            carImageView.setFitHeight(height * 0.056);
+        }
+        if (mazeNumber == 2) {
+            carImageView.setFitWidth(width * 0.096);
+            carImageView.setFitHeight(height * 0.116);
+        }
     }
 }

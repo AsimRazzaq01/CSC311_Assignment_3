@@ -40,7 +40,8 @@ public class MazeController {
     private boolean robotEnabled;
 
     Robot robot = new Robot();
-    Car carImage = new Car(15,259);
+    Car carImage1 = new Car(15,259,1);
+    Car carImage2 = new Car(15,20,2);
     PixelReader robotPixelImage;
     @FXML
     private Button swapSprite;
@@ -56,8 +57,8 @@ public class MazeController {
             robotPixelImage = maze1ImageView.getImage().getPixelReader();
             //Created a robot object and add it to the maze 1 pane
             maze1Pane.getChildren().add(robot);
-            maze1Pane.getChildren().add(carImage.getCarImageView());
-            carImage.getCarImageView().setVisible(false);
+            maze1Pane.getChildren().add(carImage1.getCarImageView());
+            carImage1.getCarImageView().setVisible(false);
             robotEnabled = true;
             maze1Pane.widthProperty().addListener(mz1Width);
             maze1Pane.heightProperty().addListener(mz1Height);
@@ -80,8 +81,11 @@ public class MazeController {
         if (MAZE2 != null) {
             maze2ImageView.setImage(new Image(MAZE2));
             //Makes the image responsive with window size by binding it to the parent pane's width and height
+            maze2Pane.getChildren().add(carImage2.getCarImageView());
             maze2ImageView.fitWidthProperty().bind(maze2Pane.widthProperty());
             maze2ImageView.fitHeightProperty().bind(maze2Pane.heightProperty());
+            maze2Pane.widthProperty().addListener(mz2Width);
+            maze2Pane.heightProperty().addListener(mz2Height);
         }
     }
 
@@ -94,19 +98,14 @@ public class MazeController {
     //swaps player between car and robot
     @FXML
     void swapPlayer(){
-//        //swaps player
-//        robot.swapPlayer();
-//        //logic so you don't have to re press manual after swapping
-//        if(movementEnabled)
-//            this.manualMode();
         if (robotEnabled) {
             robot.setVisible(false);
-            carImage.getCarImageView().setVisible(true);
+            carImage1.getCarImageView().setVisible(true);
             robotEnabled = false;
         }
         else {
             robot.setVisible(true);
-            carImage.getCarImageView().setVisible(false);
+            carImage1.getCarImageView().setVisible(false);
             robotEnabled = true;
         }
 
@@ -120,6 +119,9 @@ public class MazeController {
         //First move
         robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), _ -> {
             stage.setResizable(false);
+            robot.setVisible(true);
+            carImage1.getCarImageView().setVisible(false);
+            robotEnabled = true;
             startAnimationButton1.setDisable(true);
             manualModeButton.setDisable(true);
             swapSprite.setDisable(true);
@@ -281,11 +283,11 @@ public class MazeController {
             //Listens to the width of maze 1 image and scales robot position according to its size
             //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
-            carImage.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
+            carImage1.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
             //Listens to the width of maze 1 pane and scales robot size accordingly to be a consistent size
             robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
-            carImage.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
-            carImage.updateCarImageRelativePosition();
+            carImage1.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage1.updateCarImageRelativePosition();
             robot.updateRobotRelativePosition();
         }
     };
@@ -296,12 +298,36 @@ public class MazeController {
             //Listens to the height of maze 1 image and scales robot position according to its size
             //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
-            carImage.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
+            carImage1.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
             //Listens to the height of maze 1 pane and scales robot size accordingly to be a consistent size
             robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
-            carImage.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
-            carImage.updateCarImageRelativePosition();
+            carImage1.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage1.updateCarImageRelativePosition();
             robot.updateRobotRelativePosition();
+        }
+    };
+
+    ChangeListener<Number> mz2Width = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            //Listens to the width of maze 2 image and scales robot position according to its size
+            //Passes the value of the calculated scale factor (new width/old width)
+            carImage2.setScaleFactorX(newValue.doubleValue() / maze2ImageView.getImage().getWidth());
+            //Listens to the width of maze 2 pane and scales robot size accordingly to be a consistent size
+            carImage2.updateCarImageSize(maze2Pane.getWidth(), maze2Pane.getHeight());
+            carImage2.updateCarImageRelativePosition();
+        }
+    };
+
+    ChangeListener<Number> mz2Height = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            //Listens to the height of maze 2 image and scales robot position according to its size
+            //Passes the value of the calculated scale factor (new width/old width)
+            carImage2.setScaleFactorY(newValue.doubleValue() / maze2ImageView.getImage().getHeight());
+            //Listens to the height of maze 2 pane and scales robot size accordingly to be a consistent size
+            carImage2.updateCarImageSize(maze2Pane.getWidth(), maze2Pane.getHeight());
+            carImage2.updateCarImageRelativePosition();
         }
     };
 
@@ -334,18 +360,18 @@ public class MazeController {
                 moveCarImageSprite(0, carImageStep);
                 break;
             case LEFT:
-                if (carImage.isFacingRight()) {
-                    carImage.flip();
-                    carImage.setFacingRight(false);
-                    carImage.setFacingLeft(true);
+                if (carImage1.isFacingRight()) {
+                    carImage1.flip();
+                    carImage1.setFacingRight(false);
+                    carImage1.setFacingLeft(true);
                 }
                 moveCarImageSprite(-carImageStep,0);
                 break;
             case RIGHT:
-                if (carImage.isFacingLeft()) {
-                    carImage.flip();
-                    carImage.setFacingRight(true);
-                    carImage.setFacingLeft(false);
+                if (carImage1.isFacingLeft()) {
+                    carImage1.flip();
+                    carImage1.setFacingRight(true);
+                    carImage1.setFacingLeft(false);
                 }
                 moveCarImageSprite(carImageStep,0);
         }
@@ -363,9 +389,9 @@ public class MazeController {
 
     private void moveCarImageSprite(double newX, double newY) {
         if (checkCarImageEdges(newX, newY)) {
-            carImage.setCarImageX(carImage.getCarImageX() + newX);
-            carImage.setCarImageY(carImage.getCarImageY() + newY);
-            carImage.updateCarImageRelativePosition();
+            carImage1.setCarImageX(carImage1.getCarImageX() + newX);
+            carImage1.setCarImageY(carImage1.getCarImageY() + newY);
+            carImage1.updateCarImageRelativePosition();
         }
     }
 
@@ -417,10 +443,10 @@ public class MazeController {
     private boolean checkCarImageEdges(double newX, double newY) {
         int maze1WallArgb = -16755815;
         int carWidth = 25, carHeight = 25;
-        int carImageLeftEdge = (int) (carImage.getCarImageX() + newX);
-        int carImageRightEdge = (int) (carImage.getCarImageX() + newX + carWidth);
-        int carImageTopEdge = (int) (carImage.getCarImageY() + newY);
-        int carImageBottomEdge = (int) (carImage.getCarImageY() + newY + carHeight);
+        int carImageLeftEdge = (int) (carImage1.getCarImageX() + newX);
+        int carImageRightEdge = (int) (carImage1.getCarImageX() + newX + carWidth);
+        int carImageTopEdge = (int) (carImage1.getCarImageY() + newY);
+        int carImageBottomEdge = (int) (carImage1.getCarImageY() + newY + carHeight);
 
         int carImageHeight = (int) (maze1ImageView.getImage().getHeight());
         int carImageWidth = (int) (maze1ImageView.getImage().getWidth());
