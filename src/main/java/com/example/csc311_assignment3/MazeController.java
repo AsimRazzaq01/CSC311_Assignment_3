@@ -37,10 +37,13 @@ public class MazeController {
     private final static InputStream MAZE1 = MazeController.class.getResourceAsStream(MAZE1_FILE);
     private final static InputStream MAZE2 = MazeController.class.getResourceAsStream(MAZE2_FILE);
     private boolean movementEnabled = false;
-    private boolean facingRight = true;
+    private boolean robotEnabled;
 
     Robot robot = new Robot();
+    Car carImage = new Car(15,259);
     PixelReader robotPixelImage;
+    @FXML
+    private Button swapSprite;
 
     @FXML
     public void initialize() {
@@ -53,6 +56,9 @@ public class MazeController {
             robotPixelImage = maze1ImageView.getImage().getPixelReader();
             //Created a robot object and add it to the maze 1 pane
             maze1Pane.getChildren().add(robot);
+            maze1Pane.getChildren().add(carImage.getCarImageView());
+            carImage.getCarImageView().setVisible(false);
+            robotEnabled = true;
             maze1Pane.widthProperty().addListener(mz1Width);
             maze1Pane.heightProperty().addListener(mz1Height);
 
@@ -60,9 +66,13 @@ public class MazeController {
             maze1Pane.setFocusTraversable(true);
 
             maze1Pane.setOnKeyPressed(event -> {
-                if (movementEnabled) {  // Only move if enabled
+                if (movementEnabled && robotEnabled) {  // Only move if enabled
                     moveRobot(event.getCode());
                     event.consume(); // Prevent tab switching
+                }
+                if (movementEnabled && !robotEnabled) {
+                    moveCarImage(event.getCode());
+                    event.consume();
                 }
             });
         }
@@ -84,11 +94,21 @@ public class MazeController {
     //swaps player between car and robot
     @FXML
     void swapPlayer(){
-        //swaps player
-        robot.swapPlayer();
-        //logic so you don't have to re press manual after swapping
-        if(movementEnabled)
-            this.manualMode();
+//        //swaps player
+//        robot.swapPlayer();
+//        //logic so you don't have to re press manual after swapping
+//        if(movementEnabled)
+//            this.manualMode();
+        if (robotEnabled) {
+            robot.setVisible(false);
+            carImage.getCarImageView().setVisible(true);
+            robotEnabled = false;
+        }
+        else {
+            robot.setVisible(true);
+            carImage.getCarImageView().setVisible(false);
+            robotEnabled = true;
+        }
 
     }
 
@@ -97,17 +117,13 @@ public class MazeController {
         Timeline robotAnimation = new Timeline();
         Stage stage = (Stage) maze1Pane.getScene().getWindow();
 
-        //flips robot if not facing proper direction
-        if(!robot.isFacingRight()) {
-            robot.flip();
-            robot.setFacingRight(!robot.isFacingRight());
-        }
-
         //First move
         robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), _ -> {
             stage.setResizable(false);
             startAnimationButton1.setDisable(true);
             manualModeButton.setDisable(true);
+            swapSprite.setDisable(true);
+            movementEnabled = false;
             robot.setRobotX(15);
             robot.setRobotY(259);
             robot.updateRobotRelativePosition();
@@ -247,6 +263,7 @@ public class MazeController {
             stage.setResizable(true);
             startAnimationButton1.setDisable(false);
             manualModeButton.setDisable(false);
+            swapSprite.setDisable(false);
         }));
         robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(14700), _ -> {
             robot.setRobotX(15);
@@ -264,8 +281,11 @@ public class MazeController {
             //Listens to the width of maze 1 image and scales robot position according to its size
             //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
+            carImage.setScaleFactorX(newValue.doubleValue() / maze1ImageView.getImage().getWidth());
             //Listens to the width of maze 1 pane and scales robot size accordingly to be a consistent size
             robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage.updateCarImageRelativePosition();
             robot.updateRobotRelativePosition();
         }
     };
@@ -276,37 +296,58 @@ public class MazeController {
             //Listens to the height of maze 1 image and scales robot position according to its size
             //Passes the value of the calculated scale factor (new width/old width)
             robot.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
+            carImage.setScaleFactorY(newValue.doubleValue() / maze1ImageView.getImage().getHeight());
             //Listens to the height of maze 1 pane and scales robot size accordingly to be a consistent size
             robot.updateRobotSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage.updateCarImageSize(maze1Pane.getWidth(), maze1Pane.getHeight());
+            carImage.updateCarImageRelativePosition();
             robot.updateRobotRelativePosition();
         }
     };
 
     private void moveRobot(KeyCode key) {
-        double step = 3;
+        double robotStep = 3;
 
         switch (key) {
             case UP:
-                moveRobotSprite(0, -step);
+                moveRobotSprite(0, -robotStep);
                 break;
             case DOWN:
-                moveRobotSprite(0, step);
+                moveRobotSprite(0, robotStep);
                 break;
             case LEFT:
-                //code to flip robot
-                if(robot.isFacingRight()) {
-                    robot.flip();
-                    robot.setFacingRight(!robot.isFacingRight());
-                }
-                moveRobotSprite(-step,0);
+                moveRobotSprite(-robotStep,0);
                 break;
             case RIGHT:
-                //code to flip robot
-                if(!robot.isFacingRight()) {
-                    robot.flip();
-                    robot.setFacingRight(!robot.isFacingRight());
+                moveRobotSprite(robotStep,0);
+        }
+    }
+
+    private void moveCarImage(KeyCode key) {
+        double carImageStep = 3;
+
+        switch (key) {
+            case UP:
+                moveCarImageSprite(0, -carImageStep);
+                break;
+            case DOWN:
+                moveCarImageSprite(0, carImageStep);
+                break;
+            case LEFT:
+                if (carImage.isFacingRight()) {
+                    carImage.flip();
+                    carImage.setFacingRight(false);
+                    carImage.setFacingLeft(true);
                 }
-                moveRobotSprite(step,0);
+                moveCarImageSprite(-carImageStep,0);
+                break;
+            case RIGHT:
+                if (carImage.isFacingLeft()) {
+                    carImage.flip();
+                    carImage.setFacingRight(true);
+                    carImage.setFacingLeft(false);
+                }
+                moveCarImageSprite(carImageStep,0);
         }
     }
 
@@ -317,6 +358,14 @@ public class MazeController {
             robot.setRobotY(robot.getRobotY() + newY);
             //Updates the robot's layoutX() and layoutY() to be in a relative position
             robot.updateRobotRelativePosition();
+        }
+    }
+
+    private void moveCarImageSprite(double newX, double newY) {
+        if (checkCarImageEdges(newX, newY)) {
+            carImage.setCarImageX(carImage.getCarImageX() + newX);
+            carImage.setCarImageY(carImage.getCarImageY() + newY);
+            carImage.updateCarImageRelativePosition();
         }
     }
 
@@ -358,6 +407,52 @@ public class MazeController {
             //Checks top edge of robot from left to right
             for (int x = robotLeftEdge; x < robotRightEdge; x++) {
                 if (robotTopEdge <= 0 || robotPixelImage.getArgb(x, robotTopEdge) == maze1WallArgb) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkCarImageEdges(double newX, double newY) {
+        int maze1WallArgb = -16755815;
+        int carWidth = 25, carHeight = 25;
+        int carImageLeftEdge = (int) (carImage.getCarImageX() + newX);
+        int carImageRightEdge = (int) (carImage.getCarImageX() + newX + carWidth);
+        int carImageTopEdge = (int) (carImage.getCarImageY() + newY);
+        int carImageBottomEdge = (int) (carImage.getCarImageY() + newY + carHeight);
+
+        int carImageHeight = (int) (maze1ImageView.getImage().getHeight());
+        int carImageWidth = (int) (maze1ImageView.getImage().getWidth());
+
+        if (newX > 0) {
+            //Checks right edge of robot from top to down
+            for (int y = carImageTopEdge; y < carImageBottomEdge; y++) {
+                if (carImageRightEdge >= carImageWidth || robotPixelImage.getArgb(carImageRightEdge, y) == maze1WallArgb) {
+                    return false;
+                }
+            }
+        }
+        else if (newX < 0) {
+            //Checks left edge of robot from top to down
+            for (int y = carImageTopEdge; y < carImageBottomEdge; y++) {
+                if (carImageLeftEdge <= 0 || robotPixelImage.getArgb(carImageLeftEdge, y) == maze1WallArgb) {
+                    return false;
+                }
+            }
+        }
+        else if (newY > 0) {
+            //Checks bottom edge of robot from left to right
+            for (int x = carImageLeftEdge; x < carImageRightEdge; x++) {
+                if (carImageBottomEdge >= carImageHeight || robotPixelImage.getArgb(x, carImageBottomEdge) == maze1WallArgb) {
+                    return false;
+                }
+            }
+        }
+        else if (newY < 0) {
+            //Checks top edge of robot from left to right
+            for (int x = carImageLeftEdge; x < carImageRightEdge; x++) {
+                if (carImageTopEdge <= 0 || robotPixelImage.getArgb(x, carImageTopEdge) == maze1WallArgb) {
                     return false;
                 }
             }
