@@ -12,7 +12,9 @@ public class Robot extends ImageView {
     private final static InputStream CAR = MazeController.class.getResourceAsStream(CAR_FILE);
     private final Image carImage = new Image(CAR);
     private final Image robotImage = new Image(ROBOT);
+
     private boolean isRobot = true;
+    private boolean facingRight = true;
 
     private double robotX;
     private double robotY;
@@ -24,6 +26,7 @@ public class Robot extends ImageView {
             this.setImage(new Image(ROBOT));
             this.setImage(robotImage);
             this.setPreserveRatio(false);
+            facingRight = true;
             isRobot = true;
             //Coordinates that position robot at entrance of maze
             this.robotX = 15;
@@ -39,6 +42,18 @@ public class Robot extends ImageView {
             this.setImage(robotImage);
         this.setPreserveRatio(true);
         isRobot = !isRobot;
+    }
+
+    public void flip(){
+        this.setScaleX(this.getScaleX() * -1);
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
     }
 
     public double getRobotX() {

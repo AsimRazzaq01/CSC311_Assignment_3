@@ -37,6 +37,7 @@ public class MazeController {
     private final static InputStream MAZE1 = MazeController.class.getResourceAsStream(MAZE1_FILE);
     private final static InputStream MAZE2 = MazeController.class.getResourceAsStream(MAZE2_FILE);
     private boolean movementEnabled = false;
+    private boolean facingRight = true;
 
     Robot robot = new Robot();
     PixelReader robotPixelImage;
@@ -80,15 +81,27 @@ public class MazeController {
         maze1Pane.requestFocus();
     }
 
+    //swaps player between car and robot
     @FXML
     void swapPlayer(){
+        //swaps player
         robot.swapPlayer();
+        //logic so you don't have to re press manual after swapping
+        if(movementEnabled)
+            this.manualMode();
+
     }
 
     @FXML
     private void automaticAnimation() {
         Timeline robotAnimation = new Timeline();
         Stage stage = (Stage) maze1Pane.getScene().getWindow();
+
+        //flips robot if not facing proper direction
+        if(!robot.isFacingRight()) {
+            robot.flip();
+            robot.setFacingRight(!robot.isFacingRight());
+        }
 
         //First move
         robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), _ -> {
@@ -280,9 +293,19 @@ public class MazeController {
                 moveRobotSprite(0, step);
                 break;
             case LEFT:
+                //code to flip robot
+                if(robot.isFacingRight()) {
+                    robot.flip();
+                    robot.setFacingRight(!robot.isFacingRight());
+                }
                 moveRobotSprite(-step,0);
                 break;
             case RIGHT:
+                //code to flip robot
+                if(!robot.isFacingRight()) {
+                    robot.flip();
+                    robot.setFacingRight(!robot.isFacingRight());
+                }
                 moveRobotSprite(step,0);
         }
     }
