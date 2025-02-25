@@ -92,7 +92,7 @@ public class Car {
             carImageView.setFitHeight(height * 0.056);
         }
         if (mazeNumber == 2) {
-            carImageView.setFitWidth(width * 0.096);
+            carImageView.setFitWidth(width * 0.126);
             carImageView.setFitHeight(height * 0.116);
         }
     }
