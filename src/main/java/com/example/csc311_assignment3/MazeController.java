@@ -28,9 +28,11 @@ public class MazeController {
     @FXML
     private Button startAnimationButton1;
     @FXML
+    private Button startAnimationButton2;
+    @FXML
     private Button manualModeButton;
     @FXML
-    private Button startAnimationButton2;
+    private Button manualModeButton2;
     @FXML
     private Button swapSprite;
 
@@ -278,6 +280,7 @@ public class MazeController {
                 robot.updateRobotRelativePosition();
             }));
         }
+
         robotAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(14500), _ -> {
             stage.setResizable(true);
             startAnimationButton1.setDisable(false);
@@ -292,6 +295,103 @@ public class MazeController {
 
         //Play Timeline
         robotAnimation.play();
+    }
+
+    @FXML
+    public void automaticCarAnimation() {
+        Timeline carAnimation = new Timeline();
+        Stage stage = (Stage) maze1Pane.getScene().getWindow();
+
+        //First move
+        carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), _ -> {
+            stage.setResizable(false);
+            startAnimationButton2.setDisable(true);
+            manualModeButton2.setDisable(true);
+            movement2Enabled = false;
+            carImage2.setCarImageX(10);
+            carImage2.setCarImageY(20);
+            carImage2.updateCarImageRelativePosition();
+            if (carImage2.isFacingLeft()) {
+                carImage2.flip();
+                carImage2.setFacingRight(true);
+                carImage2.setFacingLeft(false);
+            }
+        }));
+        for (double i = 25, time = 300; i <= 315 && time <= 3200; i += 10, time += 100) {
+            double carNewY = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageY(carNewY);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Second move
+        for (double i = 15, time = 3300; i <= 165 && time <= 4800; i += 10, time += 100) {
+            double carNewX = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageX(carNewX);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Third move
+        for (double i = 305, time = 4900; i >= 155 && time <= 6400; i -= 10, time += 100) {
+            double carNewY = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageY(carNewY);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Fourth move
+        for (double i = 175, time = 6500; i <= 295 && time <= 7700; i += 10, time += 100) {
+            double carNewX = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageX(carNewX);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Fifth move
+        for (double i = 145, time = 7800; i >= 15 && time <= 9100; i -= 10, time += 100) {
+            double carNewY = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageY(carNewY);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Sixth move
+        for (double i = 305, time = 9200; i <= 415 && time <= 10300; i += 10, time += 100) {
+            double carNewX = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageX(carNewX);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        //Seventh move
+        for (double i = 25, time = 10300; i <= 315 && time <= 13200; i += 10, time += 100) {
+            double carNewY = i;
+            carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(time), _ -> {
+                carImage2.setCarImageY(carNewY);
+                carImage2.updateCarImageRelativePosition();
+            }));
+        }
+
+        carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(13300), _ -> {
+            stage.setResizable(true);
+            startAnimationButton2.setDisable(false);
+            manualModeButton2.setDisable(false);
+        }));
+        carAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(13500), _ -> {
+            carImage2.setCarImageX(10);
+            carImage2.setCarImageY(20);
+            carImage2.updateCarImageRelativePosition();
+        }));
+
+        //Play Timeline
+        carAnimation.play();
     }
 
     ChangeListener<Number> mz1Width = new ChangeListener<>() {
